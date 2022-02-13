@@ -2,20 +2,10 @@
 K = [...Array(64).keys()].map(i=>~~(Math.abs(Math.sin(i+1))*(2**32)));
 
 // M inputs for each round
-N = [
-  ...n0 = [...Array(16).keys()],
-  ...(n0.map(a=>(a*5+1)%16)),
-  ...(n0.map(a=>(a*3+5)%16)),
-  ...(n0.map(a=>(a*7)%16))
-];
+N = [...Array(64).keys()].map(i=>(i<16?i:i<32?(i-16)*5+1:i<48?(i-32)*3+5:(i-48)*7)%16);
 
 // Shifts for each round
-S = [
-  ...s0 = [7, 12, 17, 22], ...s0, ...s0, ...s0,
-  ...s1 = [5,  9, 14, 20], ...s1, ...s1, ...s1,
-  ...s2 = [4, 11, 16, 23], ...s2, ...s2, ...s2,
-  ...s3 = [6, 10, 15, 21], ...s3, ...s3, ...s3
-];
+S = [...Array(64).keys()].map(i=>[7,12,17,22, 5,9,14,20, 4,11,16,23, 6,10,15,21][(i/16|0) * 4 + (i%4)])
 
 // Compute a md5 cycle of a 512-byte block (64 operations)
 md5cycle = (x, kk, a = x[0], b = x[1], c = x[2], d = x[3], i) => {
@@ -41,8 +31,8 @@ H = (a, b, c, d) => cmn(b ^ c ^ d, a, b);
 I = (a, b, c, d) => cmn(c ^ (b | (~d)), a, b);
 
 // Create 16 32-bit values from the current block of 512 bytes
-md5blk = (s, md5blks = [], i, _ = "charCodeAt") => {
-  for(i=0; i<64; i+=4) md5blks[i>>2] = s[_](i) + (s[_](i+1) << 8) + (s[_](i+2) << 16) + (s[_](i+3) << 24);
+md5blk = (s, md5blks = [], i) => {
+  for(i=0; i<64; i+=4) md5blks[i>>2] = s[_ = "charCodeAt"](i) + (s[_](i+1) << 8) + (s[_](i+2) << 16) + (s[_](i+3) << 24);
   return md5blks;
 }
 
