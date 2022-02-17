@@ -2,10 +2,10 @@
 <br>
 <br>A MD5 algorithm in ~1kb of JS
 <br>
-<br><input id=i placeholder="ASCII text"><button onclick="p.innerHTML=md5(i.value)">MD5</button>
+<br><input id=input placeholder="ASCII text"><button onclick="p.innerHTML=md5(input.value||'')">MD5</button>
 <pre id=p></pre>
 
-<script src=md5.js></script>
+<script src=md5.min.js></script>
 
 <script>
 
@@ -15,4 +15,3 @@ console.log(hash = md5('Here is a message that is longer than fifty-five ASCII c
 console.log(hash = md5('And here is a message that is longer than sixty-four plus fifty-five ASCII characters, which provokes a separation of that message into three blocks that undergo one MD5 computation cycle one after the other'), hash == "60a194c9bd933fc0b3cc72f0d654bd7d");
 
 </script>
-

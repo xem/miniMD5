@@ -1,12 +1,3 @@
-// Coefficients array
-K = [...Array(64).keys()].map(i=>~~(Math.abs(Math.sin(i+1))*(2**32)));
-
-// M inputs for each round
-N = [...Array(64).keys()].map(i=>(i<16?i:i<32?(i-16)*5+1:i<48?(i-32)*3+5:(i-48)*7)%16);
-
-// Shifts for each round
-S = [...Array(64).keys()].map(i=>[7,12,17,22, 5,9,14,20, 4,11,16,23, 6,10,15,21][(i/16|0)*4+(i%4)])
-
 // Compute a md5 cycle of a 512-byte block (64 operations)
 M = (x, kk, a = x[0], b = x[1], c = x[2], d = x[3], i) => {
   u = 0, v = 0, w = 0;
@@ -21,8 +12,9 @@ M = (x, kk, a = x[0], b = x[1], c = x[2], d = x[3], i) => {
 // the basic operations for each round of the algorithm
 q = 0;
 C = (q, a, b) => (
-  s = S[v++],
-  a += q + k[N[w++]] + K[u++],
+  s = [7,12,17,22, 5,9,14,20, 4,11,16,23, 6,10,15,21][(v/16|0)*4+(v++%4)],
+  a += q + k[(w<16?w:w<32?(w-16)*5+1:w<48?(w-32)*3+5:(w-48)*7)%16] + ~~(Math.abs(Math.sin(u++ +1))*(2**32)),
+  w++,
   ((a << s) | (a >>> (32 - s))) + b
 );
 F = (a, b, c, d) => C((b & c) | ((~b) & d), a, b);
@@ -70,5 +62,5 @@ md5 = (s, n = s.length, tail = [], state = [A=1732584193, B=-271733879, -A-1, -B
         return str;
       }
     )
-  ).join('');
+  ).join``;
 }
