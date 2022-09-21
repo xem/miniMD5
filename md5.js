@@ -1,5 +1,5 @@
 // Add integers, wrapping at 2^32. This uses 16-bit operations internally to work around bugs in some JS interpreters.
-A=(A,a,b=(65535&A)+(65535&a))=>(A>>16)+(a>>16)+(b>>16)<<16|65535&b;
+z=65535;A=(A,a,b=(z&A)+(z&a))=>(A>>16)+(a>>16)+(b>>16)<<16|z&b;
 
 // These functions implement the basic operation for each round of the algorithm.
 C=(C,a,h,s,t,M,b=A(A(a,C),A(s,M)))=>A(b<<t|b>>>32-t,h);
